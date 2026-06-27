@@ -9,27 +9,26 @@
 
 | 项 | 值 |
 |---|---|
-| 平台 | Vercel（推荐） |
-| URL | 部署完成后填写，例如 `https://emotion-music-box.vercel.app` |
+| 平台 | GitHub Pages |
+| URL | `https://aizy2025.github.io/emotion-music-box/` |
 | 部署日期 | 2026-06-27 |
-| GitHub 仓库 | 部署前填写你的仓库地址 |
+| GitHub 仓库 | `https://github.com/AIZY2025/emotion-music-box` |
 | 项目类型 | 纯前端 Vite + React + TypeScript |
 | 前端根目录 | `emotion-music-box/frontend` |
 | 构建产物目录 | `emotion-music-box/frontend/dist` |
+| 发布分支 | `gh-pages` |
 
 ---
 
 ## 二、选型理由
 
-本项目是纯前端项目，没有 Flask、Node 后端和数据库。核心功能全部运行在浏览器中：Web Speech API、getUserMedia、Web Audio API、Canvas 2D 和 localStorage。Vercel 对 Vite 项目支持直接，免费额度足够初赛展示，GitHub 登录后导入仓库即可部署。
+本项目是纯前端项目，没有 Flask、Node 后端和数据库。核心功能全部运行在浏览器中：Web Speech API、getUserMedia、Web Audio API、Canvas 2D 和 localStorage。
 
-GitHub Pages 也可用，但项目位于 `frontend/` 子目录，Pages 需要额外配置 GitHub Actions。Vercel 对子目录项目更省事，因此作为主方案。
+最终采用 GitHub Pages：代码已经托管在 GitHub，平台免费、公开访问稳定，适合初赛提交。由于源码在 `frontend/` 子目录，部署时先执行 Vite 构建，再把 `frontend/dist` 产物发布到 `gh-pages` 分支。
 
 ---
 
-## 三、本地部署前检查
-
-在本机先确认项目可以生产构建。
+## 三、本地构建检查
 
 ```powershell
 cd D:\file\情绪音乐盒\emotion-music-box\frontend
@@ -43,98 +42,31 @@ npm.cmd run build
 ✓ built
 ```
 
-本地预览生产构建：
-
-```powershell
-cd D:\file\情绪音乐盒\emotion-music-box\frontend
-npm.cmd run preview
-```
-
-浏览器打开命令行输出的地址，通常是：
-
-```text
-http://localhost:4173/
-```
-
 ---
 
-## 四、部署步骤：Vercel（推荐）
+## 四、访问和验收
 
-### 4.1 把项目推送到 GitHub
-
-如果还没有远程仓库，先在 GitHub 新建一个空仓库，然后执行：
-
-```powershell
-cd D:\file\情绪音乐盒\emotion-music-box
-git status
-git add .
-git commit -m "🚀 /deploy：准备 Vercel 部署"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-git push -u origin main
-```
-
-如果已经配置过远程仓库，只执行：
-
-```powershell
-cd D:\file\情绪音乐盒\emotion-music-box
-git status
-git add .
-git commit -m "🚀 /deploy：准备 Vercel 部署"
-git push
-```
-
-### 4.2 在 Vercel 导入项目
-
-1. 访问 `https://vercel.com/`
-2. 使用 GitHub 账号登录。
-3. 点击 `Add New...` → `Project`。
-4. 选择你的 GitHub 仓库。
-5. 点击 `Import`。
-
-### 4.3 Vercel 项目配置
-
-| 配置项 | 值 |
-|---|---|
-| Framework Preset | Vite |
-| Root Directory | `frontend` |
-| Build Command | `npm run build` |
-| Output Directory | `dist` |
-| Install Command | `npm install` |
-
-确认后点击 `Deploy`。
-
-### 4.4 获取 URL
-
-部署成功后，Vercel 会给出一个地址：
+线上地址：
 
 ```text
-https://YOUR_PROJECT.vercel.app
+https://aizy2025.github.io/emotion-music-box/
 ```
 
-把这个地址填回本文档“一、部署信息”的 URL 字段。
-
----
-
-## 五、访问和验收方式
-
-### 5.1 首页健康检查
-
-把 `YOUR_URL` 换成 Vercel 给你的真实地址。
+健康检查：
 
 ```powershell
-curl.exe -I https://YOUR_URL.vercel.app/
+curl.exe -I https://aizy2025.github.io/emotion-music-box/
 ```
 
 期望看到：
 
 ```text
-HTTP/2 200
+HTTP/1.1 200 OK
 ```
 
-### 5.2 浏览器手工验收
+浏览器手工验收：
 
-1. 打开 `https://YOUR_URL.vercel.app/`。
+1. 打开 `https://aizy2025.github.io/emotion-music-box/`。
 2. 页面首屏应显示“情绪音乐盒”和可视化区域。
 3. 点击右上角“开启面部识别”。
 4. 允许摄像头和麦克风权限。
@@ -142,13 +74,56 @@ HTTP/2 200
 6. 页面应自动生成情绪音乐卡并开始播放。
 7. 页面底部“最近的情绪卡”应出现记录。
 
-### 5.3 注意事项
+---
 
-摄像头和麦克风需要 HTTPS 或 localhost。Vercel 默认提供 HTTPS，因此线上地址可以正常请求权限。
+## 五、重新发布步骤
+
+当前线上版本已发布。如果后续代码修改后需要重新发布，执行：
+
+```powershell
+cd D:\file\情绪音乐盒\emotion-music-box
+npm.cmd --prefix frontend run build
+git worktree add --detach ..\emotion-music-box-pages
+```
+
+进入临时发布目录：
+
+```powershell
+cd D:\file\情绪音乐盒\emotion-music-box-pages
+git switch --orphan gh-pages
+```
+
+清空临时目录中除 `.git` 外的文件，把 `frontend/dist` 里的内容复制进去，再提交推送：
+
+```powershell
+git add .
+git commit -m "🚀 deploy static site to GitHub Pages"
+git push -f origin gh-pages
+```
+
+回到主项目并清理临时 worktree：
+
+```powershell
+cd D:\file\情绪音乐盒\emotion-music-box
+git worktree remove ..\emotion-music-box-pages --force
+```
 
 ---
 
-## 六、环境变量 / 敏感信息
+## 六、GitHub Pages 设置
+
+如果页面打不开或显示 404，在 GitHub 仓库中检查：
+
+1. 打开仓库 `Settings`。
+2. 进入 `Pages`。
+3. `Source` 选择 `Deploy from a branch`。
+4. `Branch` 选择 `gh-pages`。
+5. 目录选择 `/ (root)`。
+6. 保存后等待 1-3 分钟。
+
+---
+
+## 七、环境变量 / 敏感信息
 
 本项目当前没有后端、数据库、Token 签名密钥和第三方 API Key，因此不需要配置环境变量。
 
@@ -160,126 +135,27 @@ HTTP/2 200
 
 ---
 
-## 七、回滚方案
+## 八、回滚方案
 
-### 方案 1：通过 Vercel UI 回滚
+### 方案 1：回滚 `gh-pages` 分支
 
-1. 打开 Vercel 项目。
-2. 进入 `Deployments`。
-3. 找到上一个可用版本。
-4. 点击该版本右侧菜单。
-5. 选择 `Promote to Production` 或 `Redeploy`。
+```powershell
+cd D:\file\情绪音乐盒\emotion-music-box-pages
+git log --oneline -5
+git reset --hard GOOD_COMMIT_HASH
+git push -f origin gh-pages
+```
 
-### 方案 2：通过 Git 回滚
-
-查看提交历史：
+### 方案 2：重新发布 main 的上一个稳定版本
 
 ```powershell
 cd D:\file\情绪音乐盒\emotion-music-box
 git log --oneline -5
+git checkout GOOD_COMMIT_HASH
+npm.cmd --prefix frontend run build
 ```
 
-撤销最近一次提交并推送：
-
-```powershell
-cd D:\file\情绪音乐盒\emotion-music-box
-git revert HEAD
-git push
-```
-
-Vercel 会在 `git push` 后自动重新部署。
-
-如果需要回到指定 commit：
-
-```powershell
-cd D:\file\情绪音乐盒\emotion-music-box
-git checkout -b rollback-to-good-version GOOD_COMMIT_HASH
-git push -u origin rollback-to-good-version
-```
-
-然后在 Vercel 中把该分支部署结果提升为生产版本。
-
----
-
-## 八、备选方案：GitHub Pages
-
-如果不想使用 Vercel，可以用 GitHub Actions 把 Vite 构建产物发布到 GitHub Pages。
-
-### 8.1 新建工作流文件
-
-在仓库根目录新建 `.github/workflows/deploy-pages.yml`：
-
-```yaml
-name: Deploy Frontend to GitHub Pages
-
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm install
-
-      - name: Build
-        working-directory: frontend
-        run: npm run build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: frontend/dist
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-```
-
-### 8.2 提交并开启 Pages
-
-```powershell
-cd D:\file\情绪音乐盒\emotion-music-box
-git add .github\workflows\deploy-pages.yml
-git commit -m "🚀 /deploy：添加 GitHub Pages 部署流程"
-git push
-```
-
-然后在 GitHub 仓库中：
-
-1. 打开 `Settings` → `Pages`。
-2. `Source` 选择 `GitHub Actions`。
-3. 等待 Actions 跑完。
-4. 访问页面给出的 URL。
+然后按“重新发布步骤”把 `frontend/dist` 发布到 `gh-pages`。
 
 ---
 
@@ -287,12 +163,12 @@ git push
 
 | 错误 | 原因 | 解决 |
 |---|---|---|
-| Vercel 找不到项目 | Root Directory 没填 `frontend` | 在项目设置里把 Root Directory 改为 `frontend` |
-| 部署后白屏 | Output Directory 不正确 | Vercel Output Directory 填 `dist` |
-| 构建失败 | 依赖未安装或 Node 版本过旧 | Vercel 默认 Node 20；本地先执行 `npm.cmd run build` |
-| 摄像头无法使用 | 页面不是 HTTPS 或权限被拒绝 | 使用 Vercel HTTPS 地址，并在浏览器设置中允许摄像头 |
+| 页面 404 | GitHub Pages 没选 `gh-pages / root` | 进入 `Settings → Pages` 选择 `gh-pages` 分支 |
+| 页面白屏 | Vite base 路径不对 | `frontend/vite.config.ts` 需要 `base: "/emotion-music-box/"` |
+| 摄像头无法使用 | 权限被拒绝或浏览器不支持 | 使用 Chrome/Edge，允许摄像头权限 |
 | 麦克风/语音无反应 | 浏览器不支持 Web Speech API | 使用 Chrome 或 Edge |
 | 刷新后历史消失 | 浏览器清理了 localStorage | 使用普通窗口，不要用隐私模式 |
+| Vercel 地址跳登录 | Vercel 开启了部署保护 | 本项目最终使用 GitHub Pages URL，不使用 Vercel URL |
 
 ---
 
@@ -301,3 +177,4 @@ git push
 | 版本 | 日期 | 变更 | 作者 |
 |---|---|---|---|
 | v1.0 | 2026-06-27 | 首次生成部署文档 | AI-DevOps |
+| v1.1 | 2026-06-27 | 更新为 GitHub Pages 真实部署地址 | AI-DevOps |
